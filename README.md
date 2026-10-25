@@ -22,3 +22,28 @@ i'll be tiny Ripe programs fight in a simulation
 - ticket budget and process sandbox
 - switching between bots
 - recompile and hot reload
+
+
+plans
+
+- static mockup
+- responsiveness / basic buttons
+- editable text buffer (most of my problems)
+- save file / invoke ripec
+- fixed tick arena + robots
+- ripe bot abi
+- bot switch / recompile
+- isolate / ticket accounting
+
+the hard part is going to come with the editors. i need to start
+thiking about owned mutable text
+
+- strings
+- growable arrows
+- alloc
+- utf8 index
+- modules
+- files
+- child processesgit reset HEAD / pipe
+- diagnostic
+the list goes on...
