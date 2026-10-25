@@ -1,5 +1,4 @@
 Color :: struct { r: u8, g: u8, b: u8, a: u8 };
-
 InitWindow : (i32, i32, cstr) -> () : extern "C";
 WindowShouldClose : () -> bool : extern "C";
 SetTargetFPS : (i32) -> () : extern "C";
@@ -8,15 +7,44 @@ ClearBackground : (Color) -> () : extern "C";
 DrawText : (cstr, i32, i32, i32, Color) -> () : extern "C";
 EndDrawing : () -> () : extern "C";
 CloseWindow : () -> () : extern "C";
+DrawRectangleLines : (i32, i32, i32, i32, Color) -> () : extern "C";
 
 main :: fn -> i32 {
-  InitWindow(1100, 700, "BitBrawler");
+  window_width := 1280;
+  window_height := 720;
+
+  header_height := 50;
+  bottom_height := 100;
+  left_width := 500;
+
+  arena_x := left_width;
+  arena_y := header_height;
+  arena_width := window_width - left_width;
+  arena_height := window_height - header_height - bottom_height;
+  bottom_y := arena_y + arena_height;
+
+  background_color := Color.{r = 248, g = 248, b = 245, a = 255};
+  border_color := Color.{r = 0, g = 0, b = 0, a = 255};
+
+  InitWindow(window_width, window_height, "BitBrawler");
   SetTargetFPS(60);
 
   while !WindowShouldClose() {
     BeginDrawing();
-    ClearBackground(Color.{r = 248, g = 248, b = 245, a = 255});
-    DrawText("BitBrawler", 32, 28, 32, Color.{r = 35, g = 35, b = 35, a = 255});
+    ClearBackground(background_color);
+
+    // editor
+    DrawRectangleLines(0, header_height, left_width, arena_height, border_color);
+
+    // arena
+    DrawRectangleLines(arena_x, arena_y, arena_width, arena_height, border_color);
+
+    // bot status
+    DrawRectangleLines(0, bottom_y, left_width, bottom_height, border_color);
+
+    // logs
+    DrawRectangleLines(arena_x, bottom_y, arena_width, bottom_height, border_color);
+
     EndDrawing()
   };
 
