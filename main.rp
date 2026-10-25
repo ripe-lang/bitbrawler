@@ -31,6 +31,7 @@ main :: fn -> i32 {
   background_color := Color.{r = 248, g = 248, b = 245, a = 255};
   border_color := Color.{r = 0, g = 0, b = 0, a = 255};
   text_color := Color.{r = 0, g = 0, b = 0, a = 255};
+  button_color := Color.{r = 50, g = 205, b = 50, a = 255};
 
   grid_columns := 12;
   grid_rows := 9;
@@ -51,18 +52,33 @@ main :: fn -> i32 {
   restart_label := "Restart";
   speed_label := "1x Speed";
 
-  play_width := MeasureText(play_label, control_font_size);
-  pause_width := MeasureText(pause_label, control_font_size);
-  restart_width := MeasureText(restart_label, control_font_size);
-  speed_width := MeasureText(speed_label, control_font_size);
-  controls_width := play_width + pause_width + restart_width + speed_width + control_gap * (control_count - 1);
+  play_text_width := MeasureText(play_label, control_font_size);
+  pause_text_width := MeasureText(pause_label, control_font_size);
+  restart_text_width := MeasureText(restart_label, control_font_size);
+  speed_text_width := MeasureText(speed_label, control_font_size);
+
+  controls_width := play_text_width + pause_text_width + restart_text_width + speed_text_width + control_gap * (control_count - 1);
+
   controls_x := (window_width - controls_width) / 2;
   controls_y := (header_height - control_font_size) / 2;
 
   play_x := controls_x;
-  pause_x := play_x + play_width + control_gap;
-  restart_x := pause_x + pause_width + control_gap;
-  speed_x := restart_x + restart_width + control_gap;
+  pause_x := play_x + play_text_width + control_gap;
+  restart_x := pause_x + pause_text_width + control_gap;
+  speed_x := restart_x + restart_text_width + control_gap;
+
+  recompile_label := "Recompile";
+  recompile_font_size := 20;
+  recompile_text_width := MeasureText(recompile_label, recompile_font_size);
+
+  button_padding_x := 15;
+  button_height := 30;
+  // Button Width=Text Width+(Left Padding+Right Padding)
+  button_width := recompile_text_width + button_padding_x * 2;
+  button_x := window_width - header_padding - button_width;
+  button_y := (header_height - button_height) / 2;
+  button_text_x := button_x + (button_width - recompile_text_width) / 2;
+  button_text_y := button_y + (button_height - recompile_font_size) / 2;
 
   // body_font_size := 18;
 
@@ -81,6 +97,10 @@ main :: fn -> i32 {
     DrawText(speed_label, speed_x, controls_y, control_font_size, text_color);
 
     // recompile
+    DrawRectangle(button_x, button_y, button_width, button_height, button_color);
+    DrawRectangleLines(button_x, button_y, button_width, button_height, border_color);
+    DrawText(recompile_label, button_text_x, button_text_y, recompile_font_size, text_color);
+
 
     // editor
     DrawRectangleLines(0, header_height, left_width, arena_height, border_color);
