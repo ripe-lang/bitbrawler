@@ -7,7 +7,9 @@ ClearBackground : (Color) -> () : extern "C";
 DrawText : (cstr, i32, i32, i32, Color) -> () : extern "C";
 EndDrawing : () -> () : extern "C";
 CloseWindow : () -> () : extern "C";
+// x, y, w, h
 DrawRectangleLines : (i32, i32, i32, i32, Color) -> () : extern "C";
+DrawLine : (i32, i32, i32, i32, Color) -> () : extern "C";
 
 main :: fn -> i32 {
   window_width := 1280;
@@ -26,6 +28,9 @@ main :: fn -> i32 {
   background_color := Color.{r = 248, g = 248, b = 245, a = 255};
   border_color := Color.{r = 0, g = 0, b = 0, a = 255};
 
+  grid_columns := 12;
+  grid_rows := 9;
+
   InitWindow(window_width, window_height, "BitBrawler");
   SetTargetFPS(60);
 
@@ -38,6 +43,17 @@ main :: fn -> i32 {
 
     // arena
     DrawRectangleLines(arena_x, arena_y, arena_width, arena_height, border_color);
+
+    // arena grid
+    for column := 1..grid_columns {
+      line_x := arena_x + arena_width * column / grid_columns;
+      DrawLine(line_x, arena_y, line_x, arena_y + arena_height, border_color)
+    };
+
+    for row:= 1..grid_rows {
+      line_y := arena_y + arena_height * row / grid_rows;
+      DrawLine(arena_x, line_y, arena_x + arena_width, line_y, border_color)
+    };
 
     // bot status
     DrawRectangleLines(0, bottom_y, left_width, bottom_height, border_color);
