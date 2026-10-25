@@ -10,12 +10,15 @@ CloseWindow : () -> () : extern "C";
 // x, y, w, h
 DrawRectangleLines : (i32, i32, i32, i32, Color) -> () : extern "C";
 DrawLine : (i32, i32, i32, i32, Color) -> () : extern "C";
+DrawRectangle : (i32, i32, i32, i32, Color) -> () : extern "C";
+MeasureText : (cstr, i32) -> i32 : extern "C";
 
 main :: fn -> i32 {
   window_width := 1280;
   window_height := 720;
 
   header_height := 50;
+  header_padding := 10;
   bottom_height := 100;
   left_width := 500;
 
@@ -27,16 +30,52 @@ main :: fn -> i32 {
 
   background_color := Color.{r = 248, g = 248, b = 245, a = 255};
   border_color := Color.{r = 0, g = 0, b = 0, a = 255};
+  text_color := Color.{r = 0, g = 0, b = 0, a = 255};
 
   grid_columns := 12;
   grid_rows := 9;
 
+  title := "BitBrawler";
+  title_font_size := 30;
+  title_x := header_padding;
+  title_y := (header_height - title_font_size) / 2;
+
   InitWindow(window_width, window_height, "BitBrawler");
   SetTargetFPS(60);
+
+  control_font_size := 20;
+  control_gap := 16;
+  control_count := 4;
+  play_width := MeasureText("Play", control_font_size);
+  pause_width := MeasureText("Pause", control_font_size);
+  restart_width := MeasureText("Restart", control_font_size);
+  speed_width := MeasureText("1x Speed", control_font_size);
+  controls_width := play_width + pause_width + restart_width + speed_width + control_gap * (control_count - 1);
+  controls_x := (window_width - controls_width) / 2;
+  controls_y := (header_height - control_font_size) / 2;
+
+  play_x := controls_x;
+  pause_x := play_x + play_width + control_gap;
+  restart_x := pause_x + pause_width + control_gap;
+  speed_x := restart_x + restart_width + control_gap;
+
+  // body_font_size := 18;
 
   while !WindowShouldClose() {
     BeginDrawing();
     ClearBackground(background_color);
+
+    // header
+    // title
+    DrawText(title, title_x, title_y, title_font_size, text_color);
+
+    // controls
+    DrawText("Play", play_x, controls_y, control_font_size, text_color);
+    DrawText("Pause", pause_x, controls_y, control_font_size, text_color);
+    DrawText("Restart", restart_x, controls_y, control_font_size, text_color);
+    DrawText("1x Speed", speed_x, controls_y, control_font_size, text_color);
+
+    // recompile
 
     // editor
     DrawRectangleLines(0, header_height, left_width, arena_height, border_color);
@@ -50,7 +89,7 @@ main :: fn -> i32 {
       DrawLine(line_x, arena_y, line_x, arena_y + arena_height, border_color)
     };
 
-    for row:= 1..grid_rows {
+    for row := 1..grid_rows {
       line_y := arena_y + arena_height * row / grid_rows;
       DrawLine(arena_x, line_y, arena_x + arena_width, line_y, border_color)
     };
